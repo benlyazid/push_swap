@@ -1,5 +1,17 @@
 
+import copy
+import random
+def is_sorted():
+	arr = stack_a.copy()
+	arr.sort()
+	l = len(stack_a)
+	for i in range(l):
+		if arr[i] != stack_a[i]:
+			return 0
+	return 1
+		
 def swap(index):
+	global count_operation
 	if index == 1 or  index == 3:
 		save = stack_a[0]
 		stack_a[0] = stack_a[1]
@@ -11,14 +23,16 @@ def swap(index):
 	count_operation += 1
 
 def rotate(index):
+	global count_operation
+	l = len(stack_a) - 1
 	if index == 1 or index == 3:
 		ferst = stack_a[0]
 		stack_a.remove(ferst)
-		stack_a.insert(-1, ferst)
+		stack_a.insert(l, ferst)
 	if index == 2 or index == 3:
 		ferst = stack_b[0]
 		stack_b.remove(ferst)
-		stack_b.insert(-1, ferst)
+		stack_b.insert(l, ferst)
 	count_operation += 1
 
 def reverse_rotate(index):
@@ -46,69 +60,93 @@ def	push_to(index):
 		stack_a.remove(value)
 	count_operation += 1
 
-def make_operation(index):
-	if index == 0:
-		push_to(2)
-	if index == 1:
-		swap(1)
-		push_to(2)
-	if index == len(stack_a) - 1:
-		reverse_rotate(1)
-		push_to(2)
+
+def make_operation(index, number):
+	while index != 0:
+		mid = len(stack_a) / 2
+		if index <= mid:
+			rotate(1)
+		else:
+			reverse_rotate(1) 
+		index = stack_a.index(number)
+	push_to(2)
+
+
 
 def is_in_min_range(number):
-	mx = max(stack_a)
-	mn = min(stack_a)
-	srt = sorted(stack_a)
-	mx_dst = abs(srt.index(mx) - srt.index(number))
-	mn_dst = abs(srt.index(mn) - srt.index(number))
+	global mx, mn
+	
+	mx_dst = abs(sorted_stack_a.index(mx) - sorted_stack_a.index(number))
+	mn_dst = abs(sorted_stack_a.index(mn) - sorted_stack_a.index(number))
 	if mn_dst > mx_dst :
 		return 0
 	return 1
 
-def	chose_next_number():
+def	chose_next_number(search_range):
 	arr = []
 	l = len(stack_a)
-	if l > 0 and is_in_min_range(stack_a[0]):
+	a = search_range[0]
+	if l > a and is_in_min_range(stack_a[a]):
 		arr.append(stack_a[0])
-	if l > 1 and is_in_min_range(stack_a[1]):
+
+	a = search_range[1]
+	if l > a and is_in_min_range(stack_a[a]):
 		arr.append(stack_a[1])
-	if l > 2 and is_in_min_range(stack_a[-1]):
-		arr.append(stack_a[-1])
+
+	a = search_range[2]
+	a = len(stack_a) + a
+
+	if l > a and is_in_min_range(stack_a[a]):
+		arr.append(stack_a[a])
 	if len(arr) == 0:
 		return -1;
 	return (min(arr))
 
-def push_swap():
+def push_swap_0():
+	search_range = [0, 1, -1]
 	while True:
-		next_number = chose_next_number()
+		next_number = chose_next_number(search_range)
 		if next_number != -1:
 			index = stack_a.index(next_number)
-			make_operation(index)
+			make_operation(index, next_number)
+			print("stack_a", stack_a)
+			print("stack_b", stack_b)
+			search_range = [0, 1, -1]
+		else:
+			search_range[0] += 2
+			search_range[1] += 2
+			search_range[2] -= 1
+			#break
+		if search_range[0] > len(stack_a):
+			break
 
-		break
+def push_swap():
+	while len(stack_a):
+		next_index = stack_a.index(min(stack_a))
+		make_operation(next_index, stack_a[next_index])
+		if  is_sorted():
+				break
+	while(len(stack_b)):
+		push_to(1)
 
-count_operation = 0
-stack_a = [4,9,2,5,1]
-stack_b = []
-push_swap()
-print(stack_a)
-print(stack_b)
-print(count_operation)
-'''
-reverse_rotate(1)
-print(stack_a)
-print(stack_b)
-push_to(2)
-print(stack_a)
-print(stack_b)
-swap(1)
-print(stack_a)
-print(stack_b)
-reverse_rotate(1)
-print(stack_a)
-print(stack_b)
-push_to(1)
-print(stack_a)
-print(stack_b)
-'''
+reapet = 1
+average = 0
+for i in range(reapet):
+	count_operation = 0
+	range_number = 500
+	stack_a = random.sample(range(range_number), range_number)
+	#stack_a = [5, 2, 4, 1, 7, 3, 9, 6, 8]
+	sorted_stack_a = stack_a.copy()
+	sorted_stack_a.sort()
+	stack_b = []
+	mx = max(sorted_stack_a)
+	mn = min(sorted_stack_a)
+	#print("stack_a", stack_a)
+	#print('-----------------------------------------')
+	#print("stack_b", stack_b)
+	push_swap()
+	#print("stack_a", stack_a)
+
+	print(count_operation)
+	average += count_operation
+print("average = {}", average / reapet)
