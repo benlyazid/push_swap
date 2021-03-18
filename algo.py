@@ -1,6 +1,7 @@
 
 import copy
 import random
+find = 0
 def is_sorted():
 	arr = stack_a.copy()
 	arr.sort()
@@ -62,8 +63,19 @@ def	push_to(index):
 
 
 def make_operation(index, number):
+	global find
+	mid = len(stack_a) / 2
+	srt = stack_a.copy()
+	srt.sort()
+	index_0 = stack_a.index(srt[0])
+	index_1 = stack_a.index(srt[1])
+	if (abs(mid - index_0) > abs(mid - index_1)) or find == 1:
+		index = index_0
+		find  = 0
+	else:
+		index = index_1
+		find = 1
 	while index != 0:
-		mid = len(stack_a) / 2
 		if index <= mid:
 			rotate(1)
 		else:
@@ -102,38 +114,26 @@ def	chose_next_number(search_range):
 		return -1;
 	return (min(arr))
 
-def push_swap_0():
-	search_range = [0, 1, -1]
-	while True:
-		next_number = chose_next_number(search_range)
-		if next_number != -1:
-			index = stack_a.index(next_number)
-			make_operation(index, next_number)
-			print("stack_a", stack_a)
-			print("stack_b", stack_b)
-			search_range = [0, 1, -1]
-		else:
-			search_range[0] += 2
-			search_range[1] += 2
-			search_range[2] -= 1
-			#break
-		if search_range[0] > len(stack_a):
-			break
 
 def push_swap():
 	while len(stack_a):
-		next_index = stack_a.index(min(stack_a))
-		make_operation(next_index, stack_a[next_index])
 		if  is_sorted():
 				break
+		next_index = stack_a.index(min(stack_a))
+		make_operation(next_index, stack_a[next_index])
+		if  len(stack_b) > 1 and stack_b[0] < stack_b[1]:
+			if len(stack_a) > 1 and  stack_a[0] > stack_a[1]:
+				swap(3)
+			else:
+				swap(2)
 	while(len(stack_b)):
 		push_to(1)
 
-reapet = 1
+reapet = 10
 average = 0
 for i in range(reapet):
 	count_operation = 0
-	range_number = 500
+	range_number = 5
 	stack_a = random.sample(range(range_number), range_number)
 	#stack_a = [5, 2, 4, 1, 7, 3, 9, 6, 8]
 	sorted_stack_a = stack_a.copy()
@@ -141,12 +141,13 @@ for i in range(reapet):
 	stack_b = []
 	mx = max(sorted_stack_a)
 	mn = min(sorted_stack_a)
-	#print("stack_a", stack_a)
+	print("stack_a", stack_a)
 	#print('-----------------------------------------')
 	#print("stack_b", stack_b)
 	push_swap()
-	#print("stack_a", stack_a)
+	print("stack_a", stack_a)
 
 	print(count_operation)
+
 	average += count_operation
 print("average = {}", average / reapet)
