@@ -67,16 +67,9 @@ def make_operation(index, number):
 	mid = len(stack_a) / 2
 	srt = stack_a.copy()
 	srt.sort()
-	index_0 = stack_a.index(srt[0])
-	index_1 = stack_a.index(srt[1])
-	if (abs(mid - index_0) > abs(mid - index_1)) or find == 1:
-		index = index_0
-		find  = 0
-	else:
-		index = index_1
-		find = 1
+	find = 1
 	while index != 0:
-		if index <= mid:
+		if index <= len(stack_a) - index:
 			rotate(1)
 		else:
 			reverse_rotate(1) 
@@ -121,19 +114,19 @@ def push_swap():
 				break
 		next_index = stack_a.index(min(stack_a))
 		make_operation(next_index, stack_a[next_index])
-		if  len(stack_b) > 1 and stack_b[0] < stack_b[1]:
-			if len(stack_a) > 1 and  stack_a[0] > stack_a[1]:
-				swap(3)
-			else:
-				swap(2)
+		#if  len(stack_b) > 1 and stack_b[0] < stack_b[1]:
+		#	if len(stack_a) > 1 and  stack_a[0] > stack_a[1]:
+		#		swap(3)
+		#	else:
+		#		swap(2)
 	while(len(stack_b)):
 		push_to(1)
 
-reapet = 10
+reapet = 1
 average = 0
 for i in range(reapet):
 	count_operation = 0
-	range_number = 5
+	range_number = 250
 	stack_a = random.sample(range(range_number), range_number)
 	#stack_a = [5, 2, 4, 1, 7, 3, 9, 6, 8]
 	sorted_stack_a = stack_a.copy()
