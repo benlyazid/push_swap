@@ -124,6 +124,7 @@ def push_swap():
 
 reapet = 1
 average = 0
+'''
 for i in range(reapet):
 	count_operation = 0
 	range_number = 250
@@ -143,4 +144,9 @@ for i in range(reapet):
 	print(count_operation)
 
 	average += count_operation
-print("average = {}", average / reapet)
+print("average = {}", average / reapet)'''
+scr = 0
+r = 5
+for i in range(r):
+	scr += i
+print(scr // r)

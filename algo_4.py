@@ -1,9 +1,5 @@
 import random
 
-MOVES_COUNTS = 0
-REAPET_100 = 3
-RANGE_NUMBER = 300
-
 def is_sorted(stack):
 	arr = stack.copy()
 	arr.sort()
@@ -68,63 +64,89 @@ def	push_to(source, destination):
 	MOVES_COUNTS += 1
 
 
+
+def initial_values_global(stack_a):
+	global RANGE_NUMBER, REAPET_100
+	l = len(stack_a)
+
+
 def	initial_stack(stack_a, stack_b, reapet):
-	range_number = (reapet * 100)
+	range_number = reapet * 100
+	print('range is ', range_number)
+
 	range_min = range_number - 100
 	rotate_count = 0
+	count = 0
+	l = len(stack_a)
 	while len(stack_a) and  len(stack_b) != 100:
 		if stack_a[0] < range_number and stack_a[0] >= range_min:
 			push_to(stack_a, stack_b)
 		else:
 			rotate(stack_a)
 			rotate_count += 1
-
+		count += 1
+		if len(stack_a) == 0 or count > l or range_min > stack_a[0]:
+			break
+		#print(stack_b)
 	while rotate_count:
 		rotate_count -= 1
 		reverse_rotate(stack_a)
-	
-
 def	set_the_10_5_number(stack_a, stack_b, reapet):
-	range_number =(reapet * 10)
+
+	range_number = (reapet * 10)
 	count = 0
+	tst = []
 	rotate_count = 0
-	while count < 10:
+	#print('range is', range_number)
+	while count < 10 and len(stack_b):
 		if stack_b[0] < range_number:
+			tst.append(stack_b[0])
 			push_to(stack_b, stack_a)
 			count += 1
 		else:
 			rotate(stack_b)
+	
 	count = 0
 	range_number -= 5
 	rotate_count = 0
 	while len(stack_a) and count < 5:
-		if stack_a[0] >= range_number:
+		if stack_a[0] >= range_number and stack_a[0] < range_number + 5:
 			push_to(stack_a, stack_b)
 			count += 1
 		else:
 			rotate(stack_a)
 			rotate_count += 1
+
 	while rotate_count:
 		reverse_rotate(stack_a)
 		rotate_count -= 1
-
+	#print('stack_a', stack_a[:5] , range_number)
+	#print('stack_b', stack_b[:5], range_number + 5)
 
 def	finish_sorting(stack_a, stack_b):
+	
 	for i in range(5):
 		rotate(stack_a)
+	
 	for i in range(5):
 		push_to(stack_b, stack_a)
 		rotate(stack_a)
 
 
-def chose_operation(a_oper, b_oper, a_count, b_count):
+def chose_operation(a_oper, b_oper, a_count, b_count, depth=1):
 
 	if len(b_oper) > b_count and  a_count + 1 < len(a_oper) and a_oper[a_count + 1] == b_oper[b_count]:
 		return 1
 	if len(a_oper) > a_count and b_count + 1 < len(b_oper) and a_oper[a_count] == b_oper[b_count + 1]:
 		return 2
-	if len(a_oper) > a_count and len(b_oper) > b_count:
-		return 3
+
+	if depth == 1:
+		chose_a = chose_operation(a_oper, b_oper, a_count + 1, b_count, 2)
+		chose_b = chose_operation(a_oper, b_oper, a_count, b_count + 1, 2)
+		if chose_a:
+			return chose_a
+		if chose_b:
+			return chose_b
 	if len(a_oper) > a_count:
 		return 1
 	if len(b_oper) > b_count:
@@ -166,14 +188,8 @@ def make_operation(stack_a, stack_b, a_oper, b_oper):
 	l_a = len(a_oper)
 	l_b = len(b_oper)
 	i = 0
-	while count_a < l_a or count_b < l_b:
-		if count_a < l_a:
-			exec_operation(stack_a, stack_b, a_oper[count_a], 1)
-			count_a += 1
-		if count_b < l_b:
-			exec_operation(stack_a, stack_b, b_oper[count_b], 2)
-			count_b += 1
-		'''if count_a < l_a and count_b < l_b and a_oper[count_a] == b_oper[count_b]:
+	while count_a < l_a or count_b < l_b:	
+		if count_a < l_a and count_b < l_b and a_oper[count_a] == b_oper[count_b]:
 			exec_operation(stack_a, stack_b, a_oper[count_a], 3)
 			count_a += 1
 			count_b += 1
@@ -184,7 +200,7 @@ def make_operation(stack_a, stack_b, a_oper, b_oper):
 				count_a += 1
 			if chose == 3 or chose == 2:
 				exec_operation(stack_a, stack_b, b_oper[count_b], chose)
-				count_b += 1'''
+				count_b += 1
 		i += 1
 
 
@@ -195,10 +211,33 @@ def	sort_5_number(stack):
 		make_operation(stack_a, stack_b, a_operation, b_peration)
 
 
+
+def	sort_last_number_by_index(stack, i, l):
+	global MOVES_COUNTS
+	if len(stack) == 0:
+		return 
+	mx = max(stack[:l - i])
+	rotate_count = 0
+	if stack[l - 1 - i] != mx:
+		while stack[0] != mx:
+			rotate(stack)
+			rotate_count += 1
+		while rotate_count != l - 1 - i:
+			swap(stack)
+			rotate(stack)
+
+			rotate_count += 1
+		while rotate_count:
+			reverse_rotate(stack)
+			rotate_count -= 1
+
+
 def	sort_number_by_index(stack, i):
 	global MOVES_COUNTS
 	save = MOVES_COUNTS
 	operation = []
+	if len(stack) == 0:
+		return operation
 	mx = max(stack[:5 - i])
 	rotate_count = 0
 	if stack[4 - i] != mx:
@@ -222,31 +261,56 @@ def	sort_number_by_index(stack, i):
 
 
 def test(stack_a, stack_b):
-	global REAPET_100
+	global REAPET_100, RANGE_NUMBER
 	reapet = 1
-	for j in range(1, REAPET_100 + 1):
-		initial_stack(stack_a, stack_b, j)
-		for i in range(1, 11):
-			print('start0')
+	r = 10
+	if REAPET_100 != 0:
+		for j in range(1, REAPET_100 + 1):
+			initial_stack(stack_a, stack_b, j)
+			for i in range(1, r + 1):
+				set_the_10_5_number(stack_a, stack_b, reapet)
+				sort_5_number(stack_a)
+				finish_sorting(stack_a, stack_b)
+				reapet += 1
+		if RANGE_NUMBER % 100 :
+			print(stack_a)
+			initial_stack(stack_a, stack_b, j + 1)
+			r = RANGE_NUMBER % 100
+			r = r // 10 + 1
+			for i in range(1, r):
+				set_the_10_5_number(stack_a, stack_b, reapet)
+				sort_5_number(stack_a)
+				#print(stack_a[:5])
+				#print(stack_b[:5])
+				finish_sorting(stack_a, stack_b)
+				reapet += 1
+
+	else:
+		r = RANGE_NUMBER // 10 + 1
+		#if RANGE_NUMBER % 10:
+		#	r += 1
+		initial_stack(stack_a, stack_b, 1)
+		for i in range(1, r):
 			set_the_10_5_number(stack_a, stack_b, reapet)
-			print('start1')
 			sort_5_number(stack_a)
-			print('start2')
-			#print(stack_a[:5])
 			finish_sorting(stack_a, stack_b)
 			reapet += 1
-			
-		#print(stack_a)
-		#print('	---------------------------------------')
+	if len(stack_b):
+		for i in range(len(stack_b)):
+			sort_last_number_by_index(stack_b, i, len(stack_b))
+		for i in range(len(stack_b)):
+			push_to(stack_b, stack_a)
+			rotate(stack_a)
+
+MOVES_COUNTS = 0
+RANGE_NUMBER = 5
+REAPET_100 = RANGE_NUMBER//100
 
 stack_a = random.sample(range(RANGE_NUMBER), RANGE_NUMBER)
-stack_b = []
-#initial_stack(stack_a, stack_b, 1)
-#set_the_10_5_number(stack_a, stack_b, 1)
 save = MOVES_COUNTS
-#sort_5_number(stack_a)
-#finish_sorting(stack_a, stack_b)
-
+stack_b = []
 test(stack_a, stack_b)
 print(stack_a)
+print('-------------------------------')
+print(stack_b)
 print(MOVES_COUNTS)
