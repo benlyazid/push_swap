@@ -6,7 +6,7 @@
 /*   By: kbenlyaz <kbenlyaz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/01 11:30:17 by kbenlyaz          #+#    #+#             */
-/*   Updated: 2021/04/02 16:36:35 by kbenlyaz         ###   ########.fr       */
+/*   Updated: 2021/04/03 13:29:34 by kbenlyaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,30 +110,36 @@ int	sort_last_number_by_index(ll *stack, int i, int len)
 	ll	mx;
 	int	rotate_count;
 	int moves;
-	
+	int	l;
+	printf("start sorting\n");
+	print_stack(stack, len, mx);
+	l = len_number_in_stack(stack, len);
 	moves = 0;
 	if (len_number_in_stack(stack, len) == 0)
 		return (0);
-	mx = get_max_in_range(stack, len, len - i);
+	mx = get_max_in_range(stack, l, l - i);
 	rotate_count = 0;
-	if (stack[len - i - 1] == mx)
+	if (stack[l - i - 1] == mx)
 		return (1);
 	while (stack[0] != mx)
 	{
 		moves += rotate(stack, len);
 		rotate_count += 1;
 	}	
-	while( rotate_count != len - 1 - i)
+
+	while( rotate_count != l - 1 - i)
 	{
 		moves += swap(stack);
 		moves += rotate(stack, len);
 		rotate_count += 1;
 	}
+
 	while (rotate_count)
 	{
 		moves += rev_rotate(stack, len);
 		rotate_count -= 1;
 	}
+	printf("end sorting %d\n", moves);
 	return(moves);
 }
 
@@ -141,21 +147,27 @@ int			finish_number_stack_b(ll *stack_a, ll *stack_b, int ln)
 {
 	int	i;
 	int	moves;
+	int	l;
 
 	i = 0;
 	moves = 0;
-	
-	while (i < ln)
+
+	while (i < len_number_in_stack(stack_b, ln))
 	{
 		moves += sort_last_number_by_index(stack_b, i, ln);
 		i++;
 	}
+	
 	i = 0;	
-	while (i < ln)
+	print_stack(stack_b, ln, moves);
+	l = len_number_in_stack(stack_b, ln);
+	while (i < l)
 	{
 		moves += push_to(stack_b, stack_a, ln);
 		moves += rotate(stack_a, ln);		
 		i++;
 	}
+	//printf("finish number in [%d] and l is %d\n", moves, l);
+	
 	return (moves);
 }

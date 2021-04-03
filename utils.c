@@ -6,7 +6,7 @@
 /*   By: kbenlyaz <kbenlyaz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/01 09:16:11 by kbenlyaz          #+#    #+#             */
-/*   Updated: 2021/04/02 12:17:08 by kbenlyaz         ###   ########.fr       */
+/*   Updated: 2021/04/03 10:03:59 by kbenlyaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,6 +195,9 @@ int			print_stack(ll *stack, int len, int index)
 	printf("[%d] ", index);
 	while (i < len && stack[i] != LL_MAX)
 	{
+		//if (stack[i] == LL_MAX)
+			//printf(" %d ", -1);
+		//else
 		printf(" %lld ", stack[i]);
 		i++;
 	}

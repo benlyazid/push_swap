@@ -6,7 +6,7 @@
 /*   By: kbenlyaz <kbenlyaz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/01 15:59:03 by kbenlyaz          #+#    #+#             */
-/*   Updated: 2021/04/02 18:07:22 by kbenlyaz         ###   ########.fr       */
+/*   Updated: 2021/04/03 13:11:38 by kbenlyaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ int	initial_stack(ll *stack_a, ll *stack_b, int reapet, int len)
 	rotate_count = 0;
 	range = reapet * 100;
 	range_min = range - 100;
+	moves = 0;
 	while (len_number_in_stack(stack_a, len) && len_number_in_stack(stack_b, len) != 100)
 	{
 		if (stack_a[0] < range && stack_a[0] >= range_min)
@@ -42,6 +43,7 @@ int	initial_stack(ll *stack_a, ll *stack_b, int reapet, int len)
 		rotate_count--;
 		moves += rev_rotate(stack_a, len);
 	}
+	printf("initial with%d\n", reapet);
 	return (moves);
 }
 
@@ -56,6 +58,7 @@ int	set_the_10_5_numbers(ll *stack_a, ll *stack_b, int reapet, int len)
 	rotate_count = 0;
 	range = reapet * 10;
 	count = 0;
+	moves = 0;
 	while (count < 10 && len_number_in_stack(stack_b, len))
 	{
 		if (stack_b[0] < range)
@@ -108,7 +111,7 @@ int	sort_5_number_in_2_stack(ll *stack_a, ll *stack_b, int ln)
 		a_opr = sort_number_by_index(stack_a_cp, i, ln);
 		b_opr = sort_number_by_index(stack_b_cp, i, ln);
 		moves += make_operation(stack_a, stack_b, a_opr, b_opr, ln);
-		printf("a [%s] b[%s]\n", a_opr, b_opr);
+		//printf("a [%s] b[%s]\n", a_opr, b_opr);
 		free(stack_a_cp);
 		free(stack_b_cp);
 		i++;
@@ -129,9 +132,8 @@ char	*sort_number_by_index(ll *stack, int i, int len)
 	index = -1;
 	oper = malloc(sizeof(char) * 1000);
 	mx = get_max_in_range(stack, len, 5 - i);
-	printf("max is [%d]\n", mx);
-	print_stack(stack, len, -1);
-	printf("------------------------\n");
+	//print_stack(stack, len, -1);
+	//printf("------------------------\n");
 	rotate_count = 0;
 	if (stack[4 - i] != mx)
 	{
@@ -170,13 +172,14 @@ int			sort_more_than_100_number(t_struct *strct)
 	int	i;
 	int	r;
 
-	i = 1;
 	moves = 0;
 	j = 1;
 	rpt = 1;
 	while (j < (int)(strct->len / 100) + 1)
 	{
+		i = 1;
 		moves += initial_stack(strct->stack_a, strct->stack_b, j, strct->len);
+		
 		while (i < 11)
 		{
 			moves += set_the_10_5_numbers(strct->stack_a, strct->stack_b, rpt, strct->len);
@@ -187,21 +190,25 @@ int			sort_more_than_100_number(t_struct *strct)
 		}
 		j++;
 	}
-	if ((int)(strct->len / 100) % 100)
+	print_stack(strct->stack_b, strct->len, 98);
+
+	if (((int)(strct->len / 100)) % 100)
 	{
-		j = 1;
 		r =  strct->len % 100;
 		r = ((int)(r / 10)) + 1;
-		moves += initial_stack(strct->stack_a, strct->stack_b, rpt, strct->len);
+		moves += initial_stack(strct->stack_a, strct->stack_b, j, strct->len);
+		print_stack(strct->stack_b, strct->len, j);
+		j = 1;
 		while (j < r)
 		{
-			moves += set_the_10_5_numbers(strct->stack_a, strct->stack_b, rpt, strct->len);			j++;
+			moves += set_the_10_5_numbers(strct->stack_a, strct->stack_b, rpt, strct->len);
 			moves += sort_5_number_in_2_stack(strct->stack_a, strct->stack_b, strct->len);
 			moves += finish_sorting(strct->stack_a, strct->stack_b, strct->len);
 			rpt++;
 			j++;
 		}
 	}
+	
 	return (moves);
 }
 
@@ -217,19 +224,18 @@ int			sort_more_than_10_number(t_struct *strct)
 	rpt = 1;
 	r = ((int)(strct->len / 10));
 	r++;
-	printf("r is [%d]\n", strct->len);
 	moves += initial_stack(strct->stack_a, strct->stack_b, 1, strct->len);
 	while (i < r)
 	{
 		moves += set_the_10_5_numbers(strct->stack_a, strct->stack_b, rpt, strct->len);
+		
 		moves += sort_5_number_in_2_stack(strct->stack_a, strct->stack_b, strct->len);
-		print_stack(strct->stack_a, strct->len, 11);
-		print_stack(strct->stack_b, strct->len, 10);
+
 		moves += finish_sorting(strct->stack_a, strct->stack_b, strct->len);
+		
 		rpt++;
 		i++;
 	}
-
 	return (moves);
 }
 

@@ -6,7 +6,7 @@
 /*   By: kbenlyaz <kbenlyaz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/02 10:59:32 by kbenlyaz          #+#    #+#             */
-/*   Updated: 2021/04/02 18:12:55 by kbenlyaz         ###   ########.fr       */
+/*   Updated: 2021/04/03 09:03:31 by kbenlyaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,31 +18,40 @@ int		exec_operation(ll *stack_a, ll *stack_b, int oper, int	stack_index, int len
 	int		moves;
 
 	moves = 0;
+	//printf("EXEC oper [%c] index[%d]\n", oper, stack_index);
+	
+	//print_stack(stack_a, len, 2);
+	//print_stack(stack_b, len, 2);
+	//printf("********\n");
+
 	if (stack_index == 3)
 	{
-		if (oper == 1)
+		if (oper == '1')
 			moves += s_swap(stack_a, stack_b);
-		if (oper == 2)
+		if (oper == '2')
 			moves += s_rotate(stack_a, stack_b, len);
-		if (oper == 3)
+		if (oper == '3')
 			moves += s_rev_rotate(stack_a, stack_b, len);
 	}
+	
 	if (stack_index == 2)
 	{
-		if (oper == 1)
+		if (oper == '1')
 			moves += swap(stack_b);
-		if (oper == 2)
+		if (oper == '2')
 			moves += rotate(stack_b, len);
-		if (oper == 3)
+		if (oper == '3')
 			moves += rev_rotate(stack_b, len);
 	}
 	if (stack_index == 1)
-		if (oper == 1)
+	{
+		if (oper == '1')
 			moves += swap(stack_a);
-		if (oper == 2)
+		if (oper == '2')
 			moves += rotate(stack_a, len);
-		if (oper == 3)
+		if (oper == '3')
 			moves += rev_rotate(stack_a, len);
+	}
 	return (moves);
 }
 
@@ -85,6 +94,9 @@ int		make_operation(ll *stack_a, ll *stack_b, char *a_opr, char *b_opr, int ln)
 	i_a = 0;
 	i_b = 0;
 	moves = 0;
+	//print_stack(stack_a, ln, 1);
+	//print_stack(stack_b, ln, 1);
+	//printf("[%s]	[%s] ----------\n", a_opr, b_opr);
 	while (i_a < len(a_opr) || i_b < len(b_opr))
 	{
 		if (i_a < len(a_opr) && i_b < len(b_opr) && a_opr[i_a] == b_opr[i_b])
@@ -95,6 +107,7 @@ int		make_operation(ll *stack_a, ll *stack_b, char *a_opr, char *b_opr, int ln)
 		}
 		else
 		{
+
 			chose = chose_operation(a_opr, b_opr, i_a, i_b, 1, ln);
 			if (chose == 3 || chose == 1)
 			{
@@ -107,6 +120,13 @@ int		make_operation(ll *stack_a, ll *stack_b, char *a_opr, char *b_opr, int ln)
 				i_b++;
 			}
 		}
+
+	//print_stack(stack_a, ln, 2);
+	//print_stack(stack_b, ln, 2);
+	//printf("-----\n");
 	}
+	//print_stack(stack_a, ln, 2);
+	//print_stack(stack_b, ln, 2);
+	//printf("-------------------------------%d\n", moves);
 	return(moves);
 }

@@ -31,6 +31,7 @@ def rotate(stack):
 	ferst = stack[0]
 	stack.remove(ferst)
 	stack.insert(l, ferst)
+
 	MOVES_COUNTS += 1
 
 
@@ -83,7 +84,7 @@ def	initial_stack(stack_a, stack_b, reapet, size=100):
 	while rotate_count:
 		rotate_count -= 1
 		reverse_rotate(stack_a)
-
+	print("initial with", reapet)
 
 def	set_the_10_5_number(stack_a, stack_b, reapet):
 
@@ -145,6 +146,10 @@ def chose_operation(a_oper, b_oper, a_count, b_count, depth=1):
 
 
 def exec_operation(stack_a, stack_b, oper, index):
+	#print("EXEC oper {} index {}\n".format(oper, index))
+	#print(stack_a, stack_b)
+	#print('************')
+
 	if index == 3:
 		if oper == 1:
 			s_swap(stack_a, stack_b)
@@ -168,7 +173,7 @@ def exec_operation(stack_a, stack_b, oper, index):
 			rotate(stack_a)
 		if oper == 3:
 			reverse_rotate(stack_a)
-
+	#print("exec done\n");
 
 def make_operation(stack_a, stack_b, a_oper, b_oper):
 	# 1 is swap
@@ -179,12 +184,14 @@ def make_operation(stack_a, stack_b, a_oper, b_oper):
 	l_a = len(a_oper)
 	l_b = len(b_oper)
 	i = 0
+	#print(a_oper, b_oper)
 	while count_a < l_a or count_b < l_b:	
 		if count_a < l_a and count_b < l_b and a_oper[count_a] == b_oper[count_b]:
 			exec_operation(stack_a, stack_b, a_oper[count_a], 3)
 			count_a += 1
 			count_b += 1
 		else:
+
 			chose = chose_operation(a_oper, b_oper, count_a, count_b)
 			if chose == 3 or chose == 1:
 				exec_operation(stack_a, stack_b, a_oper[count_a], chose)
@@ -200,7 +207,6 @@ def	sort_5_number(stack_a, stack_b):
 		a_operation = sort_number_by_index(stack_a.copy(), i)
 		b_peration = sort_number_by_index(stack_b.copy(), i)
 		make_operation(stack_a, stack_b, a_operation, b_peration)
-		print(a_operation, b_peration)
 
 
 def	sort_less_than_5_number(stack_a, stack_b):
@@ -219,7 +225,6 @@ def	sort_less_than_5_number(stack_a, stack_b):
 		if stack_a[0] > stack_a[1]:
 			swap(stack_a)
 	i = 0
-	#print('tst ', stack_a, stack_b)
 
 	while i < len(stack_a) and len(stack_b):
 		mx = max(stack_b)
@@ -231,7 +236,6 @@ def	sort_less_than_5_number(stack_a, stack_b):
 		push_to(stack_b, stack_a)
 		i += 1
 
-	#print(stack_a, stack_b)
 
 
 def	sort_less_than_3_number(stack_a, stack_b):
@@ -245,17 +249,14 @@ def	sort_less_than_3_number(stack_a, stack_b):
 
 		if len(stack_a) > 1 and mx == 0:
 			rotate(stack_a)
-		print(stack_a, stack_b, 1)
 
 		if len(stack_a) > 1 and mx == 1:
 			swap(stack_a)
 			rotate(stack_a)
-		print(stack_a, stack_b, 2)
 	
 		if len(stack_a) > 1 and stack_a[1] < stack_a[0]:
 			swap(stack_a)
 		i += 1
-		print(stack_a, stack_b, 3)
 
 
 
@@ -263,8 +264,10 @@ def	sort_last_number_by_index(stack, i, l):
 	global MOVES_COUNTS
 	if len(stack) == 0:
 		return 
-	save = MOVES_COUNTS
+	
 	mx = max(stack[:l - i])
+	save = MOVES_COUNTS
+	print('start', stack, mx)
 	rotate_count = 0
 	if stack[l - 1 - i] != mx:
 		while stack[0] != mx:
@@ -280,16 +283,17 @@ def	sort_last_number_by_index(stack, i, l):
 		while rotate_count:
 			reverse_rotate(stack)
 			rotate_count -= 1
+	print('end', stack, mx, save - MOVES_COUNTS)
 
 
 def	sort_number_by_index(stack, i):
 	global MOVES_COUNTS
 	save = MOVES_COUNTS
+
 	operation = []
 	if len(stack) == 0:
 		return operation
 	mx = max(stack[:5 - i])
-	print('max is ', mx, stack)
 	rotate_count = 0
 	if stack[4 - i] != mx:
 		while stack[0] != mx:
@@ -326,9 +330,11 @@ def test(stack_a, stack_b):
 				sort_5_number(stack_a, stack_b)
 				finish_sorting(stack_a, stack_b)
 				reapet += 1
+			print("tst0")
 		if RANGE_NUMBER % 100 :
-			#print(stack_a)
+			print(j + 1, 'finish 0', stack_b)
 			initial_stack(stack_a, stack_b, j + 1)
+			print('finish ', stack_b)
 			r = RANGE_NUMBER % 100
 			r = r // 10 + 1
 			for i in range(1, r):
@@ -344,7 +350,6 @@ def test(stack_a, stack_b):
 			for i in range(1, r):
 				set_the_10_5_number(stack_a, stack_b, reapet)
 				sort_5_number(stack_a, stack_b)
-				print('10 ', stack_a, stack_b)	
 				finish_sorting(stack_a, stack_b)
 				reapet += 1
 		elif len(stack_a) > 5:
@@ -356,8 +361,13 @@ def test(stack_a, stack_b):
 			sort_less_than_5_number(stack_a, stack_b)
 	
 	if len(stack_b):
+
+		print(105,stack_b, MOVES_COUNTS)
 		for i in range(len(stack_b)):
 			sort_last_number_by_index(stack_b, i, len(stack_b))
+		print(106,stack_b, MOVES_COUNTS)
+
+		#print(88,stack_a)
 		for i in range(len(stack_b)):
 			push_to(stack_b, stack_a)
 			rotate(stack_a)
@@ -369,7 +379,7 @@ REAPET_100 = RANGE_NUMBER//100
 
 stack_a = random.sample(range(RANGE_NUMBER), RANGE_NUMBER)
 stack_b = []
-stack_a = [3,2,1,0,6,4,5,9,8,7,10,11,13,14,12]
+#stack_a = [3,2,1,0,6,4,5,9,8,7,10,11,13,14,12]
 #initial_stack(stack_a, stack_b, 1);
 #sort_last_number_by_index(stack_a, 0, 11)
 #sort_last_number_by_index(stack_a, 1, 10)
@@ -378,9 +388,11 @@ stack_a = [3,2,1,0,6,4,5,9,8,7,10,11,13,14,12]
 #set_the_10_5_number(stack_a, stack_b, 1);
 #sort_5_number(stack_a, stack_b);
 save = MOVES_COUNTS
-print(stack_a)
+print(' '.join([str(i) for i in stack_a]))
+print()
+print()
 #print(stack_a)
-print('-------------------------------')
+#print('-------------------------------')
 test(stack_a, stack_b)
 print(stack_a)
 print(MOVES_COUNTS)
