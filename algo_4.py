@@ -1,5 +1,5 @@
 import random
-
+import sys
 def is_sorted(stack):
 	arr = stack.copy()
 	arr.sort()
@@ -374,25 +374,17 @@ def test(stack_a, stack_b):
 	
 
 MOVES_COUNTS = 0
-RANGE_NUMBER = 15
+arg = int(input())
+RANGE_NUMBER = arg
 REAPET_100 = RANGE_NUMBER//100
-
 stack_a = random.sample(range(RANGE_NUMBER), RANGE_NUMBER)
 stack_b = []
-#stack_a = [3,2,1,0,6,4,5,9,8,7,10,11,13,14,12]
-#initial_stack(stack_a, stack_b, 1);
-#sort_last_number_by_index(stack_a, 0, 11)
-#sort_last_number_by_index(stack_a, 1, 10)
-#sort_last_number_by_index(stack_a, 1, 10)
-#finish_sorting(stack_a, stack_b)
-#set_the_10_5_number(stack_a, stack_b, 1);
-#sort_5_number(stack_a, stack_b);
+
 save = MOVES_COUNTS
 print(' '.join([str(i) for i in stack_a]))
-print()
-print()
 #print(stack_a)
 #print('-------------------------------')
-test(stack_a, stack_b)
-print(stack_a)
-print(MOVES_COUNTS)
+#test(stack_a, stack_b)
+#print(stack_a)
+#print(MOVES_COUNTS)
+#ARG=$(python3 ./algo_4.py 109); ./push_swap $ARG | ./checker $ARG 
